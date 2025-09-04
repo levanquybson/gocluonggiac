@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang cá nhân (Lê Văn Quý)</title>
+  <style>
+  
+  body {
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+      animation: fadeIn 1s ease-in-out;
+    }
+    /* Hiệu ứng fade-in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Đồng hồ */
+    .clock {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 150px;
+      height: 150px;
+      border: 4px solid #3498db;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 0 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+    .clock:hover {
+      transform: scale(1.05);
+    }
+
+    .hour-mark {
+      position: absolute;
+      width: 40px;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-family: 'Cambria Math', 'Georgia', serif;
+      pointer-events: none;
+    }
+
+    .hand {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      border-radius: 1px;
+    }
+
+    .hand.hour {
+      height: 35px;
+      width: 3px;
+      background: #000;
+      margin-top: -35px;
+      margin-left: -1.5px;
+    }
+
+    .hand.minute {
+      height: 50px;
+      width: 2px;
+      background: #444;
+      margin-top: -50px;
+      margin-left: -1px;
+    }
+
+    .hand.second {
+      height: 65px;
+      width: 1px;
+      background: red;
+      margin-top: -65px;
+      margin-left: -0.5px;
+    }
+
+    .center-point {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: #3498db;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #2c3e50, #3498db);
+      color: white;
+      text-align: center;
+      padding: 40px 20px 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 36px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      font-size: 18px;
+    }
+
+    /* Container & cột */
+    .container {
+      background-color: #f1f1f1;
+      padding: 30px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px; /* Khoảng cách cột đều nhau */
+    }
+
+    .column {
+      flex: 1;
+      min-width: 250px;
+      max-width: 300px;
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
+      border: 2px solid #4a90e2;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .column:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+
+    .column h2 {
+      color: #e74c3c;
+      text-align: center;
+      margin-bottom: 20px;
+      padding-top: 10px;
+    }
+
+    /* Nút */
+    .tool-button {
+      display: block;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      text-decoration: none;
+      margin: 10px auto;
+      padding: 12px 16px;
+      width: 90%;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: left;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .tool-button:hover {
+      background: linear-gradient(135deg, #2980b9, #3498db);
+      transform: translateX(5px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* Footer */
+    .footer {
+      background: #2c3e50;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .column {
+        max-width: 90%;
+      }
+    }
+
+    /* Marquee */
+    .marquee-container {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 5px 0;
+    }
+    .marquee-container span {
+      display: inline-block;
+      min-width: 100%;
+      animation: marquee 16s linear infinite;
+      font-weight: bold;
+      font-size: 18px;
+      color: gold;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Đồng hồ -->
+  <div class="clock" id="clock">
+    <div class="hand hour"></div>
+    <div class="hand minute"></div>
+    <div class="hand second"></div>
+    <div class="center-point"></div>
+  </div>
+
+  <script>
+    const clock = document.getElementById("clock");
+    const mathLabels = [
+      "\\sin\\left(\\frac{\\pi}{2}\\right)", "\\ 2!", "\\frac{e^{i\\pi} + 4}{1}",
+      "\\log_2 16", "\\int_0^5\\,dx", "\\Gamma(4)",
+      "\\sqrt{49}", "2^3", "3+A^2_3",
+      "C^2_5", "12+i^2", "\\frac{4!}{2}"
+    ];
+
+    function drawLabels() {
+      const radius = 60;
+      for (let i = 0; i < 12; i++) {
+        const angle = (i - 2) * (Math.PI * 2 / 12);
+        const x = 75 + radius * Math.cos(angle);
+        const y = 75 + radius * Math.sin(angle);
+        const div = document.createElement("div");
+        div.className = "hour-mark";
+        div.style.left = x + "px";
+        div.style.top = y + "px";
+        div.innerHTML = `\\(${mathLabels[i]}\\)`;
+        clock.appendChild(div);
+      }
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function updateTime() {
+      const now = new Date();
+      const sec = now.getSeconds() + now.getMilliseconds() / 1000;
+      const min = now.getMinutes() + sec / 60;
+      const hour = now.getHours() % 12 + min / 60;
+      document.querySelector('.hand.second').style.transform = `rotate(${sec * 6}deg)`;
+      document.querySelector('.hand.minute').style.transform = `rotate(${min * 6}deg)`;
+      document.querySelector('.hand.hour').style.transform = `rotate(${hour * 30}deg)`;
+      requestAnimationFrame(updateTime);
+    }
+
+    drawLabels();
+    requestAnimationFrame(updateTime);
+  </script>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Header -->
+  <div class="header">
+    <h1><strong>Lê Văn Quý</strong></h1>
+    <p>Giáo viên Toán THPT Bình Sơn, Quảng Ngãi – Chia sẻ công cụ ứng dụng trong giảng dạy, tài liệu dạy học</p>
+    <div class="marquee-container"><span>Đẳng cấp và phong độ là nhất thời, chỉ có phương trình là mãi mãi</span></div>
+  </div>
+
+  <!-- Nội dung -->
+  <div class="container">
+    <div class="column">
+      <h2>CÁC TOOL ỨNG DỤNG</h2>
+         <a href="https://levanquybson.github.io/mophongsgk10/"class="tool-button"> 1. Trong sgk 10</a>
+         <a href="https://levanquybson.github.io/mophongsgk11/" class="tool-button"> 2. Trong sgk 11</a>
+         <a href="https://levanquybson.github.io/mophongsgk12/" class="tool-button">3. Trong sgk 12</a>
+      <a href="https://www.geogebra.org/classic/stpvd4kk" class="tool-button">4. Trong sách chuyên đề</a>
+      <a href="https://levanquybson.github.io/mosomohinhtoanhoc" class="tool-button">5. Một số mô hình thú vị khác</a>
+      
+           </div>
+
+
+    <div class="column">
+      <h2>TUYỂN TẬP CÁC ĐỀ THI</h2>
+       <a href="https://drive.google.com/drive/u/2/my-drive" class="tool-button">1.📊 Đề thi TNTHPT Quốc gia</a>
+         <a href="https://script.google.com/macros/s/AKfycbxSYmWk3iSOXrNv4d6yeb15Qi2jLGL5SXP4rJ3ySaBWCwoZlrxGZ6UxqwTmkWjIxlhO/exec" class="tool-button">2.📊 Kho đề của Tỉnh Quảng Ngãi</a>
+         <a href="https://levanquybson.github.io/dethihsg/" class="tool-button">3.📊 Đề thi HSG-MTCT Tỉnh QNgãi</a>
+         <a href="https://levanquybson.github.io/kiemtradinhky/" class="tool-button">4.📊 Đề kiểm tra định kỳ</a>
+          <a href="#" class="tool-button">5.📊  Đề kiểm tra định kỳ tham khảo</a>
+    </div>
+
+    <div class="column">
+      <h2>TÀI LIỆU</h2>
+       <a href="https://levanquybson.github.io/sachgiaokhoa/" class="tool-button">1.🧭 Sách giáo khoa ct2018 </a>
+      <a href="https://drive.google.com/drive/folders/1-UsZojN63GyJcU4Y3_4hsuSuBQWBEkTA" class="tool-button">2.🧭 Toán thực tế khối 10</a>
+      <a href="https://drive.google.com/drive/folders/1PGjZFR4lf03jg6pwL8JDRMf1axxa6ISy?usp=drive_link" class="tool-button">3.🧭 Toán thực tế khối 11</a>
+       <a href="https://drive.google.com/drive/folders/13bePN2MadqSS7lajTKKjm__oFeN7yqIu?usp=drive_link" class="tool-button">4. 🧭 Toán thực tế khối 12</a>
+      <a href="#" class="tool-button">5.🧭 Sách tiếng anh</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    © 2025 Lê Văn Quý. All rights reserved.
+  </footer>
+
+</body>
+</html>
