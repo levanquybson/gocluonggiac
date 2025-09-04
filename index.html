@@ -1,310 +1,307 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trang cá nhân (Lê Văn Quý)</title>
+  <title>Góc lượng giác — Trực quan chuyên nghiệp</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- MathJax -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)'], ['$', '$']] } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
+    :root{
+      --bg1:#eef4ff; --bg2:#fffef6; --card:#ffffffcc; --border:#e6ecf2;
+      --shadow:0 8px 24px rgba(0,0,0,.08); --primary:#1e88e5; --primary-600:#1565c0;
+      --axis:#8d99ae; --pos:#1976d2; --neg:#d32f2f;
+    }
+    body{
+      font-family:"Inter",sans-serif;
+      background:#f6f8ff;
+      margin:0;padding:28px;color:#0f172a;
+    }
+    h1{text-align:center;margin:0 0 18px;font-weight:800;color:var(--primary-600)}
+    #layout{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+    #leftCol{
+      width:340px;background:var(--card);border:1px solid var(--border);border-radius:16px;
+      box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:14px;
+      backdrop-filter:blur(6px);
+    }
+    .panel-title{font-weight:700;color:#0b2a4a;margin-bottom:4px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .row label{font-weight:600;min-width:84px}
+    input{
+      flex:1;padding:9px 12px;border:1px solid #cbd5e1;border-radius:12px;
+      font-size:1rem;text-align:center;background:#fff;
+    }
+    input[readonly]{background:#f6f7fb;color:#334155;border-style:dashed}
+    button{padding:9px 16px;border:none;background:var(--primary);color:#fff;
+      border-radius:12px;font-size:1rem;cursor:pointer;font-weight:600}
+    #info{font-weight:700;color:#0b2a4a;background:#f1f5ff;border:1px dashed #c7d7ff;
+      padding:10px;border-radius:12px;line-height:1.4}
+    canvas{background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:var(--shadow);cursor:grab}
+    canvas:active{cursor:grabbing}
+    .formula{color:#334155;font-size:.95rem;text-align:center}
+    .note{font-size:.85rem;color:#64748b}
   
-  body {
+body {
       margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-      font-family: 'Segoe UI', sans-serif;
-      animation: fadeIn 1s ease-in-out;
+      font-family: Arial, sans-serif;
     }
-    /* Hiệu ứng fade-in */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Đồng hồ */
-    .clock {
+    footer {
       position: fixed;
-      top: 15px;
-      right: 15px;
-      width: 150px;
-      height: 150px;
-      border: 4px solid #3498db;
-      border-radius: 50%;
-      background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 0 8px rgba(0,0,0,0.1);
-      z-index: 1000;
-      transition: transform 0.3s ease;
-    }
-    .clock:hover {
-      transform: scale(1.05);
-    }
-
-    .hour-mark {
-      position: absolute;
-      width: 40px;
-      text-align: center;
-      transform: translate(-50%, -50%);
-      font-size: 12px;
-      font-family: 'Cambria Math', 'Georgia', serif;
-      pointer-events: none;
-    }
-
-    .hand {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform-origin: bottom center;
-      border-radius: 1px;
-    }
-
-    .hand.hour {
-      height: 35px;
-      width: 3px;
-      background: #000;
-      margin-top: -35px;
-      margin-left: -1.5px;
-    }
-
-    .hand.minute {
-      height: 50px;
-      width: 2px;
-      background: #444;
-      margin-top: -50px;
-      margin-left: -1px;
-    }
-
-    .hand.second {
-      height: 65px;
-      width: 1px;
-      background: red;
-      margin-top: -65px;
-      margin-left: -0.5px;
-    }
-
-    .center-point {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 8px;
-      height: 8px;
-      background: #3498db;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #2c3e50, #3498db);
-      color: white;
-      text-align: center;
-      padding: 40px 20px 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 36px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-    }
-
-    .header p {
-      margin: 10px 0 0;
-      font-size: 18px;
-    }
-
-    /* Container & cột */
-    .container {
-      background-color: #f1f1f1;
-      padding: 30px 10px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px; /* Khoảng cách cột đều nhau */
-    }
-
-    .column {
-      flex: 1;
-      min-width: 250px;
-      max-width: 300px;
-      background: linear-gradient(180deg, #f8fbff, #ffffff);
-      border: 2px solid #4a90e2;
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .column:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
-    }
-
-    .column h2 {
-      color: #e74c3c;
-      text-align: center;
-      margin-bottom: 20px;
-      padding-top: 10px;
-    }
-
-    /* Nút */
-    .tool-button {
-      display: block;
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-      text-decoration: none;
-      margin: 10px auto;
-      padding: 12px 16px;
-      width: 90%;
-      border-radius: 8px;
-      font-size: 16px;
-      text-align: left;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-    .tool-button:hover {
-      background: linear-gradient(135deg, #2980b9, #3498db);
-      transform: translateX(5px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    /* Footer */
-    .footer {
-      background: #2c3e50;
-      color: white;
-      padding: 15px 0;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
-      .column {
-        max-width: 90%;
-      }
-    }
-
-    /* Marquee */
-    .marquee-container {
+      bottom: 0;
       width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      padding: 5px 0;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      background: #f0f0f0;
+      color: #333;
+      border-top: 1px solid #ccc;
+
+      /* chống copy / bôi đen */
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
-    .marquee-container span {
-      display: inline-block;
-      min-width: 100%;
-      animation: marquee 16s linear infinite;
-      font-weight: bold;
-      font-size: 18px;
-      color: gold;
-    }
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-  </style>
+
+
+
+
+</style>
 </head>
 <body>
+  <h1>ĐỊNH NGHĨA GÓC LƯỢNG GIÁC</h1>
+<div style="text-align:center; color:red; font-weight:bold; font-style:italic; font-size:1.2rem; margin-top:16px;">
+  “Lượng giác là ngôn ngữ của dao động và vòng tròn.”
+</div>
 
-  <!-- Đồng hồ -->
-  <div class="clock" id="clock">
-    <div class="hand hour"></div>
-    <div class="hand minute"></div>
-    <div class="hand second"></div>
-    <div class="center-point"></div>
+  <div id="layout">
+    <aside id="leftCol">
+      <div class="panel-title">Nhập & thông tin</div>
+      <div class="row">
+        <label>Độ (°):</label>
+        <input type="number" id="degInput" value="0" step="1">
+      </div>
+      <div class="row">
+        <label>Radian:</label>
+        <input type="text" id="radInput" value="0" readonly>
+      </div>
+      <div class="row">
+        <label>Góc xOy (°):</label>
+        <input type="number" id="betaInput" value="45" step="1">
+      </div>
+    <div id="info">
+  α = <span id="degShow">0</span> (<span id="radShow">0</span> rad)<br>
+  k = <span id="kShow">0</span> vòng quay<br>
+  chiều <span id="sgnShow">0</span>
+</div>
+      <div class="row">
+        <button id="resetBtn">Đưa về 0°</button>
+      </div>
+      <div class="formula">
+        Công thức quy đổi: \( \alpha^{\circ} = \dfrac{\alpha\pi}{180}\,\text{rad} \)
+        <div class="note"></div>
+      </div>
+    </aside>
+    <section id="rightCol">
+      <canvas id="board" width="760" height="540"></canvas>
+    </section>
   </div>
 
-  <script>
-    const clock = document.getElementById("clock");
-    const mathLabels = [
-      "\\sin\\left(\\frac{\\pi}{2}\\right)", "\\ 2!", "\\frac{e^{i\\pi} + 4}{1}",
-      "\\log_2 16", "\\int_0^5\\,dx", "\\Gamma(4)",
-      "\\sqrt{49}", "2^3", "3+A^2_3",
-      "C^2_5", "12+i^2", "\\frac{4!}{2}"
-    ];
+<script>
+const canvas=document.getElementById('board');
+const ctx=canvas.getContext('2d');
+const cx=canvas.width/2, cy=canvas.height/2;
+const degInput=document.getElementById('degInput');
+const radInput=document.getElementById('radInput');
+const betaInput=document.getElementById('betaInput');
+const degShow=document.getElementById('degShow');
+const radShow=document.getElementById('radShow');
+const kShow=document.getElementById('kShow');
+const sgnShow=document.getElementById('sgnShow');
+const resetBtn=document.getElementById('resetBtn');
 
-    function drawLabels() {
-      const radius = 60;
-      for (let i = 0; i < 12; i++) {
-        const angle = (i - 2) * (Math.PI * 2 / 12);
-        const x = 75 + radius * Math.cos(angle);
-        const y = 75 + radius * Math.sin(angle);
-        const div = document.createElement("div");
-        div.className = "hour-mark";
-        div.style.left = x + "px";
-        div.style.top = y + "px";
-        div.innerHTML = `\\(${mathLabels[i]}\\)`;
-        clock.appendChild(div);
-      }
-      if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise();
-      }
+let alphaDeg=0, betaDeg=45;
+let dragging=false,lastRaw=0,ignoreSync=false;
+const toRad=d=>d*Math.PI/180,toDeg=r=>r*180/Math.PI;
+
+function gcd(a,b){a=Math.abs(a);while(b){[a,b]=[b,a%b]}return a||1}
+function degToPiFrac(deg){
+  if(deg===0)return "0";
+  const sign=deg<0?"-":"";let num=Math.abs(Math.round(deg)),den=180;
+  const g=gcd(num,den);num/=g;den/=g;
+  if(den===1)return sign+(num===1?"π":num+"π");
+  return sign+(num===1?"π":num+"π")+"/"+den;
+}
+
+function drawAxes(){
+  ctx.save();
+  // Ox
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(canvas.width-24, cy);
+  ctx.strokeStyle = "#0f172a";   // đậm hơn
+  ctx.lineWidth = 2.4;           // dày hơn
+  ctx.stroke();
+  ctx.fillStyle="#0b2a4a"; ctx.font="14px Inter";
+  ctx.fillText('x', canvas.width-36, cy-10);
+
+  // Oy (dùng góc betaDeg)
+  const len=270, ang=toRad(betaDeg);
+  const xOy=cx+len*Math.cos(ang), yOy=cy-len*Math.sin(ang);
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(xOy,yOy);
+  ctx.strokeStyle = "#0f172a";   // đậm hơn
+  ctx.lineWidth = 2.4;           // dày hơn
+  ctx.stroke();
+  ctx.fillText('y', xOy+8, yOy+4);
+
+  // gốc O
+  ctx.beginPath();
+  ctx.arc(cx,cy,3,0,2*Math.PI);
+  ctx.fillStyle='#000'; ctx.fill();
+  ctx.fillText('O', cx-18, cy+16);
+  ctx.restore();
+}
+function drawOM(){
+  const r=220, rad=toRad(alphaDeg);
+  const Mx=cx+r*Math.cos(rad), My=cy-r*Math.sin(rad);
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(Mx,My);
+  ctx.strokeStyle="#00897b";ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(Mx,My,6,0,2*Math.PI);ctx.fillStyle="#00bcd4";ctx.fill();
+  ctx.fillText("M", Mx+10, My-10);
+}
+function drawArrowHead(x,y,dx,dy,color){
+  const L=Math.hypot(dx,dy);if(L<1e-6)return;dx/=L;dy/=L;
+  ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(dy,dx));
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-9,4.5);ctx.lineTo(-9,-4.5);ctx.closePath();
+  ctx.fillStyle=color;ctx.fill();ctx.restore();
+}
+function niceHsl(isPos,t){
+  const hue=isPos?210:0;const sat=70;const light=62-22*t;
+  return `hsl(${hue} ${sat}% ${light}%)`;
+}
+function drawSpiral(rad){
+  const dir=rad>=0?1:-1,isPos=dir>0;const a=10,b=3,absR=Math.abs(rad);
+  ctx.save();ctx.lineWidth=1.8;let prevX,prevY;const step=0.045;
+  for(let t=0;t<=absR+1e-6;t+=step){
+    const ratio=Math.min(1,t/absR),r=a+b*t;
+    const x=cx+r*Math.cos(dir*t),y=cy-r*Math.sin(dir*t);
+    if(t===0){prevX=x;prevY=y;continue;}
+    ctx.beginPath();ctx.moveTo(prevX,prevY);ctx.lineTo(x,y);
+    ctx.strokeStyle=niceHsl(isPos,ratio);ctx.stroke();prevX=x;prevY=y;
+  }
+  const t=absR,r=a+b*t,x1=cx+r*Math.cos(dir*t),y1=cy-r*Math.sin(dir*t);
+  const dt=0.001,r2=a+b*(t+dt);
+  const x2=cx+r2*Math.cos(dir*(t+dt)),y2=cy-r2*Math.sin(dir*(t+dt));
+  drawArrowHead(x1,y1,x2-x1,y2-y1,niceHsl(isPos,.92));
+  ctx.fillStyle=niceHsl(isPos,.4);ctx.font='16px Inter';ctx.fillText('α',x1+14,y1+16);ctx.restore();
+}
+function drawArc(){
+  const rad=toRad(alphaDeg);if(Math.abs(rad)<1e-6)return;
+  if(Math.abs(rad)<2*Math.PI){
+    const r=40,steps=Math.max(28,Math.ceil(Math.abs(rad)/0.045)),isPos=rad>=0;
+    ctx.save();ctx.lineWidth=1.8;let prevX=cx+r,prevY=cy;
+    for(let i=1;i<=steps;i++){
+      const t=(i/steps)*rad,x=cx+r*Math.cos(t),y=cy-r*Math.sin(t),ratio=i/steps;
+      ctx.beginPath();ctx.moveTo(prevX,prevY);ctx.lineTo(x,y);
+      ctx.strokeStyle=niceHsl(isPos,ratio);ctx.stroke();prevX=x;prevY=y;
     }
+    const t=rad,s=Math.sign(rad)||1,x=cx+r*Math.cos(t),y=cy-r*Math.sin(t);
+    const dx=-s*r*Math.sin(t),dy=-s*r*Math.cos(t);
+    drawArrowHead(x,y,dx,dy,niceHsl(isPos,.95));
+    const mid=rad/2;ctx.fillStyle=niceHsl(isPos,.35);ctx.font='16px Inter';
+    ctx.fillText('α',cx+(r+22)*Math.cos(mid),cy-(r+22)*Math.sin(mid));ctx.restore();
+  } else drawSpiral(rad);
+}
+function redraw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawAxes();drawArc();drawOM();
 
-    function updateTime() {
-      const now = new Date();
-      const sec = now.getSeconds() + now.getMilliseconds() / 1000;
-      const min = now.getMinutes() + sec / 60;
-      const hour = now.getHours() % 12 + min / 60;
-      document.querySelector('.hand.second').style.transform = `rotate(${sec * 6}deg)`;
-      document.querySelector('.hand.minute').style.transform = `rotate(${min * 6}deg)`;
-      document.querySelector('.hand.hour').style.transform = `rotate(${hour * 30}deg)`;
-      requestAnimationFrame(updateTime);
+  const dInt = Math.round(alphaDeg);
+  // số vòng quay (dùng floor để đúng cả âm)
+  const k = Math.floor(dInt / 360);
+  const base = dInt - k*360;   // base ∈ [0,359]
+
+  const sign = alphaDeg>0?"dương":(alphaDeg<0?"âm":"0");
+
+  // --- Hiển thị độ ---
+  let degDisplay = base + "°";
+  if (k !== 0) {
+    degDisplay += (k > 0 ? " + " : " − ") + Math.abs(k) + "·360°";
+  }
+  degShow.textContent = degDisplay;
+
+  // --- Hiển thị radian ---
+  let radDisplay = degToPiFrac(base);
+  if (k !== 0) {
+    radDisplay += (k > 0 ? " + " : " − ") + Math.abs(k) + "·2π";
+  }
+  radShow.textContent = radDisplay;
+
+  // --- Hiển thị k và chiều ---
+  kShow.textContent   = k;
+  sgnShow.textContent = sign;
+
+  if(!ignoreSync){
+    ignoreSync=true;
+    degInput.value = dInt;
+    radInput.value = degToPiFrac(dInt); // rad đầy đủ chưa tách k
+    betaInput.value = betaDeg;
+    ignoreSync=false;
+  }
+}
+function getPos(evt){const rect=canvas.getBoundingClientRect();
+  const clientX=evt.touches?evt.touches[0].clientX:evt.clientX;
+  const clientY=evt.touches?evt.touches[0].clientY:evt.clientY;
+  return {x:clientX-rect.left,y:clientY-rect.top};}
+function rawAngleDegAt(p){return toDeg(Math.atan2(cy-p.y,p.x-cx));}
+function onDown(e){const p=getPos(e),r=220,Mx=cx+r*Math.cos(toRad(alphaDeg)),My=cy-r*Math.sin(toRad(alphaDeg));
+  if(Math.hypot(p.x-Mx,p.y-My)<14){dragging=true;lastRaw=rawAngleDegAt(p);}}
+function onMove(e){if(!dragging)return;const p=getPos(e),now=rawAngleDegAt(p);
+  let d=now-lastRaw;if(d>180)d-=360;if(d<-180)d+=360;alphaDeg+=d;lastRaw=now;redraw();}
+function onUp(){dragging=false;}
+degInput.addEventListener("input",()=>{if(ignoreSync)return;alphaDeg=parseInt(degInput.value)||0;redraw();});
+betaInput.addEventListener("input",()=>{if(ignoreSync)return;betaDeg=parseInt(betaInput.value)||45;redraw();});
+resetBtn.addEventListener("click",()=>{alphaDeg=0;redraw();});
+canvas.addEventListener("mousedown",onDown);
+canvas.addEventListener("mousemove",onMove);
+window.addEventListener("mouseup",onUp);
+canvas.addEventListener("touchstart",onDown,{passive:false});
+canvas.addEventListener("touchmove",onMove,{passive:false});
+window.addEventListener("touchend",onUp);
+redraw();
+</script>
+</script>
+
+
+<meta charset="UTF-8">
+<footer id="copyright"></footer>
+
+<script>
+  // Base64 đúng (chữ Quý)
+  const b64Copyright = "wqkgMjAyNSBMw6ogVsSDbiBRdcO9K0dQVC4gQWxsIHJpZ2h0cyByZXNlcnZlZC4=";
+
+  const bytes = Uint8Array.from(atob(b64Copyright), c => c.charCodeAt(0));
+  const text  = new TextDecoder("utf-8").decode(bytes);
+
+  // Kiểm tra nhanh trên console: phải in đúng "© 2025 Lê Văn Quý+GPT. All rights reserved."
+  console.log(text);
+
+  document.getElementById("copyright").textContent = text;
+
+  // (tuỳ chọn) chặn chuột phải & Ctrl+C như bạn đã làm
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("keydown", e => {
+    if (e.ctrlKey && e.key.toLowerCase() === "c") {
+      e.preventDefault();
+      alert("!");
     }
-
-    drawLabels();
-    requestAnimationFrame(updateTime);
-  </script>
-
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(', '\\)']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-  <!-- Header -->
-  <div class="header">
-    <h1><strong>Lê Văn Quý</strong></h1>
-    <p>Giáo viên Toán THPT Bình Sơn, Quảng Ngãi – Chia sẻ công cụ ứng dụng trong giảng dạy, tài liệu dạy học</p>
-    <div class="marquee-container"><span>Đẳng cấp và phong độ là nhất thời, chỉ có phương trình là mãi mãi</span></div>
-  </div>
-
-  <!-- Nội dung -->
-  <div class="container">
-    <div class="column">
-      <h2>CÁC TOOL ỨNG DỤNG</h2>
-         <a href="https://levanquybson.github.io/mophongsgk10/"class="tool-button"> 1. Trong sgk 10</a>
-         <a href="https://levanquybson.github.io/mophongsgk11/" class="tool-button"> 2. Trong sgk 11</a>
-         <a href="https://levanquybson.github.io/mophongsgk12/" class="tool-button">3. Trong sgk 12</a>
-      <a href="https://www.geogebra.org/classic/stpvd4kk" class="tool-button">4. Trong sách chuyên đề</a>
-      <a href="https://levanquybson.github.io/mosomohinhtoanhoc" class="tool-button">5. Một số mô hình thú vị khác</a>
-      
-           </div>
-
-
-    <div class="column">
-      <h2>TUYỂN TẬP CÁC ĐỀ THI</h2>
-       <a href="https://drive.google.com/drive/u/2/my-drive" class="tool-button">1.📊 Đề thi TNTHPT Quốc gia</a>
-         <a href="https://script.google.com/macros/s/AKfycbxSYmWk3iSOXrNv4d6yeb15Qi2jLGL5SXP4rJ3ySaBWCwoZlrxGZ6UxqwTmkWjIxlhO/exec" class="tool-button">2.📊 Kho đề của Tỉnh Quảng Ngãi</a>
-         <a href="https://levanquybson.github.io/dethihsg/" class="tool-button">3.📊 Đề thi HSG-MTCT Tỉnh QNgãi</a>
-         <a href="https://levanquybson.github.io/kiemtradinhky/" class="tool-button">4.📊 Đề kiểm tra định kỳ</a>
-          <a href="#" class="tool-button">5.📊  Đề kiểm tra định kỳ tham khảo</a>
-    </div>
-
-    <div class="column">
-      <h2>TÀI LIỆU</h2>
-       <a href="https://levanquybson.github.io/sachgiaokhoa/" class="tool-button">1.🧭 Sách giáo khoa ct2018 </a>
-      <a href="https://drive.google.com/drive/folders/1-UsZojN63GyJcU4Y3_4hsuSuBQWBEkTA" class="tool-button">2.🧭 Toán thực tế khối 10</a>
-      <a href="https://drive.google.com/drive/folders/1PGjZFR4lf03jg6pwL8JDRMf1axxa6ISy?usp=drive_link" class="tool-button">3.🧭 Toán thực tế khối 11</a>
-       <a href="https://drive.google.com/drive/folders/13bePN2MadqSS7lajTKKjm__oFeN7yqIu?usp=drive_link" class="tool-button">4. 🧭 Toán thực tế khối 12</a>
-      <a href="#" class="tool-button">5.🧭 Sách tiếng anh</a>
-    </div>
-  </div>
-
-  <footer class="footer">
-    © 2025 Lê Văn Quý. All rights reserved.
-  </footer>
-
+  });
+</script>
 </body>
 </html>
